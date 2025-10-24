@@ -1,20 +1,35 @@
-version: 0.2
-phases:
-  install:
-    runtime-versions:
-      nodejs: 20
+version: 0.2               # defines buildspec syntax version. allows features like finally blocks, multiple runtimes, and environment variables.
+phases:                    # defines the sequence of steps your build goes through
+  install:                 #commands inside install: are run after the environment is set up but before dependencies are installed.
+    runtime-versions:      # tells CodeBuild which language/runtime environment to use.
+      nodejs: 20           # CodeBuild will use Node.js v20
     commands:
-      - npm install -g @angular/cli@17
-  pre_build:
+      - npm install -g @angular/cli@17               # installs Angular CLI version 17 globally, so you can run Angular commands (like ng build) later in the build.
+  pre_build:              #   installs your project/app dependencies
     commands:
-      - npm install
-  build:
+      - npm install    # reads your package.json and installs all required Node.js packages locally (in the node_modules directory).
+  build:               # where your actual build happens.
     commands:
-      - ng build -c production
-    finally:
+      - ng build -c production     # runs the Angular CLI build command in production configuration, typically producing optimized output files in the dist/ directory.
+    finally:      # runs no matter what — even if the build fails
       - echo 'This is the finally block execution!'
-artifacts:
+artifacts:    #  This tells CodeBuild which files to keep and package as the final output.
   files:
-    - 'dist/my-angular-project/**/*'
-    - appspec.yml
-    - 'deploy-scripts/**/*'
+    - 'dist/MyAngular-Project1/**/*'   # includes all files from your compiled Angular build.
+    - appspec.yml                  # includes the AppSpec file used by AWS CodeDeploy
+    - 'deploy-scripts/**/*'        # includes all deployment-related scripts (like start/stop hooks or config files).
+
+
+    # When CodeBuild finishes, it uploads these files to an S3 bucket or CodePipeline artifact store, where other AWS services can access them.
+    
+# 'dist/MyAngular-Project1/**/*'
+    # tells CodeBuild where to find the built output of your Angular app after it finishes compiling.
+
+#dist/ —
+  #This is the default output directory that Angular CLI (ng build) uses to store compiled files.
+
+# When you run ng build -c production
+  # Angular takes your source code (src/ folder) and compiles it into optimized static files (HTML, JS, CSS, etc.) for production.
+
+#MyAngular-Project1/ —
+    # Inside dist/, Angular creates a subfolder named after your project (the name defined in your angular.json file).
