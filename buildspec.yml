@@ -10,19 +10,19 @@ phases:                    # defines the sequence of steps your build goes throu
       - npm install    # reads your package.json and installs all required Node.js packages locally (in the node_modules directory).
   build:               # where your actual build happens.
     commands:
-      - ng build -c production     # runs the Angular CLI build command in production configuration, typically producing optimized output files in the dist/ directory.
-    finally:      # runs no matter what — even if the build fails
-      - echo 'This is the finally block execution!'
+      - ng build --configuration production     # runs the Angular CLI build command in production configuration, typically producing optimized output files in the dist/ directory.
+    #finally:      # runs no matter what — even if the build fails
+      #- echo 'This is the finally block execution!'
 artifacts:    #  This tells CodeBuild which files to keep and package as the final output.
   files:
-    - 'dist/MyAngular-Project1/**/*'   # directory where your angular.json file is stored.
+    - 'dist/my-angular-project/**/*'   # directory where your angular.json file is stored.
     - appspec.yml                  # includes the AppSpec file used by AWS CodeDeploy
     - 'deploy-scripts/**/*'        # includes all deployment-related scripts (like start/stop hooks or config files).
-
+  base-directory: 'dist/my-angular-project'      # ensures CodePipeline picks files from the build output.
 
     # When CodeBuild finishes, it uploads these files to an S3 bucket or CodePipeline artifact store, where other AWS services can access them.
     
-# 'dist/MyAngular-Project1/**/*'
+# 'dist/my-angular-project1/**/*'
     # tells CodeBuild where to find the built output of your Angular app after it finishes compiling.
 
 #dist/ —
@@ -31,5 +31,5 @@ artifacts:    #  This tells CodeBuild which files to keep and package as the fin
 # When you run ng build -c production
   # Angular takes your source code (src/ folder) and compiles it into optimized static files (HTML, JS, CSS, etc.) for production.
 
-#MyAngular-Project1/ —
+#my-angular-project1/ —
     # Inside dist/, Angular creates a subfolder named after your project (the name defined in your angular.json file).
