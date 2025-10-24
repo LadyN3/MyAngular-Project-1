@@ -10,12 +10,12 @@ phases:                    # defines the sequence of steps your build goes throu
       - npm install    # reads your package.json and installs all required Node.js packages locally (in the node_modules directory).
   build:               # where your actual build happens.
     commands:
-      - ng build -c production     # runs the Angular CLI build command in production configuration, typically producing optimized output files in the dist/ directory.
+      - ng build --prod     # runs the Angular CLI build command in production configuration, typically producing optimized output files in the dist/ directory.
     finally:      # runs no matter what — even if the build fails
       - echo 'This is the finally block execution!'
 artifacts:    #  This tells CodeBuild which files to keep and package as the final output.
   files:
-    - 'dist/MyAngular-Project1/**/*'   # includes all files from your compiled Angular build.
+    - 'dist/MyAngular-Project1/**/*'   # directory where your angular.json file is stored. 
     - appspec.yml                  # includes the AppSpec file used by AWS CodeDeploy
     - 'deploy-scripts/**/*'        # includes all deployment-related scripts (like start/stop hooks or config files).
 
